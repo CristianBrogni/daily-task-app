@@ -7,45 +7,45 @@ interface TaskFormProps {
 }
 
 export default function TaskForm({ onCreate }: TaskFormProps) {
-  const [nome, setNome] = useState("");
+  const [name, setName] = useState("");
   const [total, setTotal] = useState(4);
-  const [divisao, setDivisao] = useState(4);
-  const [horarios, setHorarios] = useState<string[]>(Array(4).fill(""));
+  const [division, setDivision] = useState(4);
+  const [times, setTimes] = useState<string[]>(Array(4).fill(""));
 
-  const handleHorarioChange = (index: number, value: string) => {
-    const novosHorarios = [...horarios];
-    novosHorarios[index] = value;
-    setHorarios(novosHorarios);
+  const handleTimeChange = (index: number, value: string) => {
+    const newTimes = [...times];
+    newTimes[index] = value;
+    setTimes(newTimes);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const quantidadePorSub = total / divisao;
+    const amountPerSub = total / division;
 
-    const subtarefas: SubTask[] = horarios.map((horario) => ({
-      horario,
-      quantidade: quantidadePorSub,
-      concluido: false,
+    const subtasks: SubTask[] = times.map((time) => ({
+      time,
+      amount: amountPerSub,
+      completed: false,
     }));
 
-    const novaTask: Task = {
+    const newTask: Task = {
       id: uuidv4(),
-      nome,
+      name,
       total,
-      divisao,
-      horarios,
-      criadoEm: new Date().toISOString(),
-      subtarefas,
+      division,
+      times,
+      createdAt: new Date().toISOString(),
+      subtasks,
     };
 
-    onCreate(novaTask);
+    onCreate(newTask);
 
-    // Limpar o formulário
-    setNome("");
+    // Clear the form
+    setName("");
     setTotal(2000);
-    setDivisao(4);
-    setHorarios(Array(4).fill(""));
+    setDivision(4);
+    setTimes(Array(4).fill(""));
   };
 
   return (
@@ -56,8 +56,8 @@ export default function TaskForm({ onCreate }: TaskFormProps) {
         <label className="block text-sm font-medium">Nome da tarefa</label>
         <input
           type="text"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className="border p-2 w-full rounded"
           required
         />
@@ -75,30 +75,29 @@ export default function TaskForm({ onCreate }: TaskFormProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Dividir em quantas vezes?</label>
+        <label className="block text-sm font-medium">Divide how many times?</label>
         <input
           type="number"
           min={1}
-          value={divisao}
+          value={division}
           onChange={(e) => {
             const val = Number(e.target.value);
-            setDivisao(val);
-            setHorarios(Array(val).fill(""));
+            setDivision(val);
+            setTimes(Array(val).fill(""));
           }}
           className="border p-2 w-full rounded"
           required
         />
       </div>
-
       <div>
-        <label className="block text-sm font-medium mb-1">Horários</label>
+        <label className="block text-sm font-medium mb-1">Times</label>
         <div className="grid grid-cols-2 gap-2">
-          {horarios.map((horario, index) => (
+          {times.map((time, index) => (
             <input
               key={index}
               type="time"
-              value={horario}
-              onChange={(e) => handleHorarioChange(index, e.target.value)}
+              value={time}
+              onChange={(e) => handleTimeChange(index, e.target.value)}
               className="border p-2 rounded"
               required
             />

@@ -1,15 +1,15 @@
 export interface SubTask {
-    horario: string;      // "08:00"
-    quantidade: number;   // 500 (ml, ou unidade equivalente)
-    concluido: boolean;   // foi feita?
-  }
-  
-  export interface Task {
+    time: string;      // "08:00"
+    amount: number;   // 500 (ml, or equivalent unit)
+    completed: boolean;   // was it done?
+}
+
+export interface Task {
     id: string;
-    nome: string;
+    name: string;
     total: number;
-    divisao: number;
-    horarios: string[];        // mesmo tamanho que "divisao"
-    criadoEm: string;
-    subtarefas: SubTask[];
-  }
+    division: number;
+    times: string[];        // same length as "division"
+    createdAt: string;
+    subtasks: SubTask[];
+}
