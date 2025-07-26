@@ -1,11 +1,13 @@
 import type { Task } from "../types";
+import {Trash2} from "lucide-react";
 
 interface Props {
     tasks: Task[];
     onToggleSubTask: (taskId: string, subIndex: number) => void;
+    onDeleteTask: (taskId: string) => void;
 }
 
-export default function TaskList({ tasks, onToggleSubTask}: Props) {
+export default function TaskList({ tasks, onToggleSubTask, onDeleteTask}: Props) {
     if (tasks.length === 0) {
         return <p className="text-gray-500">Nenhuma tarefa encontrada</p>
     }
@@ -19,7 +21,17 @@ export default function TaskList({ tasks, onToggleSubTask}: Props) {
 
                 return (
                 <div key={task.id} className="border p-4 rounded shadow">
-                    <h3 className="text-lg font-bold mb-1">{task.name}</h3>
+                    <div className="flex justify-between items-center mb-1">
+                        <h3 className="text-lg font-bold">{task.name}</h3>
+                        <button  className="flex items-center gap-1 text-red-500 hover:text-red-700 text-sm transition" onClick={() => {
+                            if (window.confirm("Tem certeza que deseja excluir esta tarefa?")) {
+                            onDeleteTask(task.id);
+                            }
+                        }}
+                        >
+                            <Trash2 className="w-4 h-4" /> Excluir
+                        </button>
+                    </div>
                     <p className="text-sm text-gray-600">Total: {task.total} | Divisão: {task.division}</p>
                     {/* Progress Bar */}
                     <div className="w-full bg-gray-200 h-3 rounded overflow-hidden mb-2">
