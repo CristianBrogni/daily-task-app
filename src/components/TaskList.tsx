@@ -1,13 +1,18 @@
+import { useState } from "react";
 import type { Task } from "../types";
-import {Trash2} from "lucide-react";
+import {Trash2, Pencil, Check, X} from "lucide-react";
 
 interface Props {
     tasks: Task[];
     onToggleSubTask: (taskId: string, subIndex: number) => void;
     onDeleteTask: (taskId: string) => void;
+    onEditTask: (updateTask: Task) => void;
 }
 
-export default function TaskList({ tasks, onToggleSubTask, onDeleteTask}: Props) {
+export default function TaskList({ tasks, onToggleSubTask, onDeleteTask, onEditTask}: Props) {
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editedName, setEditedName] = useState("");
+
     if (tasks.length === 0) {
         return <p className="text-gray-500">Nenhuma tarefa encontrada</p>
     }
@@ -18,12 +23,42 @@ export default function TaskList({ tasks, onToggleSubTask, onDeleteTask}: Props)
                 const total = task.subtasks.length;
                 const completed = task.subtasks.filter((s) => s.completed).length;
                 const porcentage =  Math.round((completed / total) * 100);
+                const isEditing = editingId === task.id;
 
                 return (
                 <div key={task.id} className="border p-4 rounded shadow">
                     <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-lg font-bold">{task.name}</h3>
-                        <button  className="flex items-center gap-1 text-red-500 hover:text-red-700 text-sm transition" onClick={() => {
+                        {isEditing ? (
+                            <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="text-lg font-bold border px-2 py-1 rounded w-full mr-2"/>
+                        ) : (
+                            <h3 className="text-lg font-bold">{task.name}</h3>
+                        )}
+                        <div className="flex gap=-2">
+                            {isEditing ? (
+                                <>
+                                <button onClick={() => {
+                                    onEditTask({ ...task, name: editedName});
+                                    setEditingId(null);
+                                }}
+                                    className="text-green-600 hover:text-green-800"
+                                >
+                                    <Check className="w-5 h-5" />
+                                </button>
+                                <button onClick={() => setEditingId(null)} className="text-gray-600 hover:text-gray-800">
+                                    <X className = "w-5 h-5" />
+                                </button>
+                                </>
+                            ) : (
+                                <>
+                                <button onClick={() => {
+                                    setEditingId(task.id);
+                                    setEditedName(task.name);
+                                }}
+                                className="text-blue-500 hover:text-blue-700"
+                                >
+                                    <Pencil className="w-5 h-5" />
+                                </button>
+                                <button  className="flex items-center gap-1 text-red-500 hover:text-red-700 text-sm transition" onClick={() => {
                             if (window.confirm("Tem certeza que deseja excluir esta tarefa?")) {
                             onDeleteTask(task.id);
                             }
@@ -31,6 +66,10 @@ export default function TaskList({ tasks, onToggleSubTask, onDeleteTask}: Props)
                         >
                             <Trash2 className="w-4 h-4" /> Excluir
                         </button>
+                                </>
+                            )}
+                        </div>
+                        
                     </div>
                     <p className="text-sm text-gray-600">Total: {task.total} | Divisão: {task.division}</p>
                     {/* Progress Bar */}

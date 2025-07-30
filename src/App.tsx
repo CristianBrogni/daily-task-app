@@ -37,13 +37,19 @@ function App() {
     setTasks(newTasks);
     saveTasks(newTasks);
   };
+
+  const handleEditText = (updatedTask : Task) => {
+    const newTasks = tasks.map((task) => task.id === updatedTask.id ? updatedTask : task);
+    setTasks(newTasks);
+    saveTasks(newTasks);
+  }
  
 
   return (
     <main className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Tarefas do Dia</h1>
       <TaskForm onCreate={handleCreateTask} />
-      <TaskList tasks={tasks} onToggleSubTask={handleToggleSubTask} onDeleteTask={handleDeleteTask}/>
+      <TaskList tasks={tasks} onToggleSubTask={handleToggleSubTask} onDeleteTask={handleDeleteTask} onEditTask={handleEditText}/>
     </main>
   );
 }
