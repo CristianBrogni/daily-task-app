@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
-import TaskForm from './components/TaskForm'
-import type { Task } from './types'
-import { saveTasks, loadTasks } from './utils/storage'
-import TaskList from './components/TaskList'
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import TaskOverviewPage from "./pages/TaskOvreviewPage";
+import CreateTaskPage from "./pages/CreateTaskPage";
+import type { Task } from "./types";
+import { saveTasks, loadTasks } from "./utils/storage";
 
 function App() {
-
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
@@ -23,9 +23,11 @@ function App() {
     const newTasks = tasks.map((task) => {
       if (task.id != taskId) return task;
 
-      const updatedSubTasks = task.subtasks.map((sub, i) => i === subIndex ? {...sub, completed: !sub.completed} : sub);
+      const updatedSubTasks = task.subtasks.map((sub, i) =>
+        i === subIndex ? { ...sub, completed: !sub.completed } : sub
+      );
 
-      return { ...task, subtasks: updatedSubTasks};
+      return { ...task, subtasks: updatedSubTasks };
     });
 
     setTasks(newTasks);
@@ -38,19 +40,40 @@ function App() {
     saveTasks(newTasks);
   };
 
-  const handleEditText = (updatedTask : Task) => {
-    const newTasks = tasks.map((task) => task.id === updatedTask.id ? updatedTask : task);
+  const handleEditText = (updatedTask: Task) => {
+    const newTasks = tasks.map((task) =>
+      task.id === updatedTask.id ? updatedTask : task
+    );
     setTasks(newTasks);
     saveTasks(newTasks);
-  }
- 
+  };
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Tarefas do Dia</h1>
-      <TaskForm onCreate={handleCreateTask} />
-      <TaskList tasks={tasks} onToggleSubTask={handleToggleSubTask} onDeleteTask={handleDeleteTask} onEditTask={handleEditText}/>
-    </main>
+    <Router>
+      <nav className="flex gap-4 p-4 bg-gray-100">
+        <Link to="/">Tarefas</Link>
+        <Link to="/criar">Nova Tarefa</Link>
+      </nav>
+      <main className="max-w-2xl mx-auto p-6">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <TaskOverviewPage
+                tasks={tasks}
+                onToggleSubTask={handleToggleSubTask}
+                onDeleteTask={handleDeleteTask}
+                onEditTask={handleEditText}
+              />
+            }
+          />
+          <Route
+            path="/criar"
+            element={<CreateTaskPage onCreate={handleCreateTask} />}
+          />
+        </Routes>
+      </main>
+    </Router>
   );
 }
 
