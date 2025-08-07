@@ -23,14 +23,55 @@ export default function TaskList({
   } | null>(null);
   const [editedTime, setEditedTime] = useState("");
   const [editedAmount, setEditedAmount] = useState(0);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("all");
 
   if (tasks.length === 0) {
     return <p className="text-gray-500">Nenhuma tarefa encontrada</p>;
   }
 
+  const isTaskCompleted = (task: Task) =>
+    task.subtasks.length > 0 &&
+    task.subtasks.every((sub) => sub.completed === true);
+
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = task.name
+      .toLowerCase()
+      .includes(search.toLocaleLowerCase());
+
+    const matchesStatus =
+      status === "all"
+        ? true
+        : status === "completed"
+        ? isTaskCompleted(task)
+        : !isTaskCompleted(task);
+
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <div className="mt-6 space-y-4">
-      {tasks.map((task) => {
+      <div className="flex gap-4 mb-4">
+        <input
+          type="text"
+          placeholder="Buscar tarefa..."
+          className="border rounded p-2 flex-1"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <select
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          className="border rounded p-2"
+        >
+          <option value="all">Todas</option>
+          <option value="completed">Concluídas</option>
+          <option value="pending">Pendentes</option>
+        </select>
+      </div>
+
+      {filteredTasks.map((task) => {
         const total = task.subtasks.length;
         const completed = task.subtasks.filter((s) => s.completed).length;
         const porcentage = Math.round((completed / total) * 100);
