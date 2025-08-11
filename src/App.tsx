@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import TaskOverviewPage from "./pages/TaskOvreviewPage";
 import CreateTaskPage from "./pages/CreateTaskPage";
+import CompletedTaskPage from "./pages/CompletedTaskPage";
 import type { Task } from "./types";
 import { saveTasks, loadTasks } from "./utils/storage";
 
@@ -53,6 +54,7 @@ function App() {
       <nav className="flex gap-4 p-4 bg-gray-100">
         <Link to="/">Tarefas</Link>
         <Link to="/criar">Nova Tarefa</Link>
+        <Link to="/concluidas">Concluídas</Link>
       </nav>
       <main className="max-w-2xl mx-auto p-6">
         <Routes>
@@ -70,6 +72,17 @@ function App() {
           <Route
             path="/criar"
             element={<CreateTaskPage onCreate={handleCreateTask} />}
+          />
+          <Route
+            path="/concluidas"
+            element={
+              <CompletedTaskPage
+                tasks={tasks}
+                onToggleSubTask={handleToggleSubTask}
+                onDeleteTask={handleDeleteTask}
+                onEditTask={handleEditText}
+              />
+            }
           />
         </Routes>
       </main>

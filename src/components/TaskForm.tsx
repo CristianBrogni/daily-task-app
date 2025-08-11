@@ -49,9 +49,10 @@ export default function TaskForm({ onCreate }: TaskFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-white shadow rounded">
-      <h2 className="text-lg font-semibold">Criar Nova Tarefa</h2>
-
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 p-4 bg-white shadow rounded"
+    >
       <div>
         <label className="block text-sm font-medium">Nome da tarefa</label>
         <input
@@ -75,7 +76,7 @@ export default function TaskForm({ onCreate }: TaskFormProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Divide how many times?</label>
+        <label className="block text-sm font-medium">Quantas divisões?</label>
         <input
           type="number"
           min={1}
@@ -90,7 +91,7 @@ export default function TaskForm({ onCreate }: TaskFormProps) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium mb-1">Times</label>
+        <label className="block text-sm font-medium mb-1">Horários</label>
         <div className="grid grid-cols-2 gap-2">
           {times.map((time, index) => (
             <input
@@ -105,7 +106,10 @@ export default function TaskForm({ onCreate }: TaskFormProps) {
         </div>
       </div>
 
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
         Criar Tarefa
       </button>
     </form>
